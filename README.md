@@ -16,12 +16,12 @@ library(rjags)
 library(coda)
 
 # Load data
-mortality <- read_xlsx("../data/Mortality_Final.xlsx")
+clinical_improvement <- read_xlsx("../data/Clinical.xlsx")
 # Variable Definitions
-study <- as.factor(mortality$Study)
-responders <- as.numeric(mortality$Outcomes)
-sampleSize <- as.numeric(mortality$N)
-treatment <- as.factor(mortality$Treat)
+study <- as.factor(clinical_improvement$Study)
+responders <- as.numeric(clinical_improvement$Outcomes)
+sampleSize <- as.numeric(clinical_improvement$N)
+treatment <- as.factor(clinical_improvement$Treat)
 data_b_bin <- data.frame(study, responders, sampleSize, treatment)
 # Network
 network <- mtc.network(data.ab = data_b_bin, description = "Network")
@@ -29,7 +29,7 @@ network <- mtc.network(data.ab = data_b_bin, description = "Network")
 model <- mtc.model( network = network, type = "consistency", factor = 2.5, n.chain = 4, linearModel = "random", dic = TRUE)
 # Run model
 result <- mtc.run(model, sampler = NA, n.adapt = 50000, n.iter = 20000, thin = 5) summary(result)
-# Plot
+# Trace plot
 png("../results/trace_plot.png", width = 1000, height = 800)
 plot(result)
 dev.off()
